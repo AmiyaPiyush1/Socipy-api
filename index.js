@@ -3,8 +3,8 @@ const http = require('http');
 
 const { Server } = require('socket.io');
 const mongoose = require('mongoose');
-const mongoURL = 'mongodb+srv://Piyush:Piyush1@cluster0.erzialc.mongodb.net/ChatNowh';
-const mongoURL2='mongodb+srv://Piyush:Piyush1@cluster0.erzialc.mongodb.net/ChatNowh'
+const mongoURL = 'mongodb+srv://Piyush:Piyush1@cluster0.erzialc.mongodb.net/ChatNow';
+const mongoURL2='mongodb+srv://Piyush:Piyush1@cluster0.erzialc.mongodb.net/ChatNow'
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -45,7 +45,7 @@ db2.once('open', () => console.log("MongoDB2 connected"));
 const User = mongoose.model('User', userSchema);
 const User2 =db2.model('User2',userSchema2);
 
-app.get("https://socipy-api.vercel.app/messages", async (req, res) => {
+app.get("/messages", async (req, res) => {
   try {
     const messages = await User2.find({});
     res.status(200).json(messages);
@@ -73,7 +73,7 @@ app.post("/send_to_DB",async(req,res)=>{
   }
 })
 
-app.post("https://socipy-api.vercel.app/user_name", async (req, res) => {
+app.post("/user_name", async (req, res) => {
   const { form,password } = req.body;
   try {
     const existingUser = await User.findOne({form:req.body.form});
@@ -95,7 +95,7 @@ app.post("https://socipy-api.vercel.app/user_name", async (req, res) => {
 
 
 
-app.post("https://socipy-api.vercel.app/login", async (req, res) => {
+app.post("/login", async (req, res) => {
   const { form, password } = req.body;
   try {
     const existingUser1 = await User.findOne({ form, password });
