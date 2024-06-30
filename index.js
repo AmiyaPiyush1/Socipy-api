@@ -16,7 +16,7 @@ app.use(cors({
 
 const mongoURL = 'mongodb+srv://Piyush:Piyush1@cluster0.erzialc.mongodb.net/ChatNow';
 
-mongoose.connect(mongoURL, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(mongoURL, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
   .then(() => {
     console.log("MongoDB connected");
   })
@@ -25,13 +25,13 @@ mongoose.connect(mongoURL, { useNewUrlParser: true, useUnifiedTopology: true })
   });
 
 const userSchema = new mongoose.Schema({
-  form: String,
+  form: { type: String, index: true },
   password: String
 });
 
 const messageSchema = new mongoose.Schema({
   message: String,
-  usernme: String
+  usernme: { type: String, index: true }
 });
 
 const User = mongoose.model('User', userSchema);
@@ -40,9 +40,10 @@ const Message = mongoose.model('Message', messageSchema);
 app.get("/messages", async (req, res) => {
   const start = Date.now();
   try {
+    console.log("Fetching messages from the database...");
     const messages = await Message.find({});
     const end = Date.now();
-    console.log(`Query execution time: ${end - start}ms`);
+    console.log(`Fetched messages in ${end - start}ms`);
     res.status(200).json(messages);
   } catch (error) {
     console.error("Error retrieving messages", error);
@@ -65,7 +66,10 @@ app.post("/send_to_DB", async (req, res) => {
     usernme
   });
   try {
+    const start = Date.now();
     await newMsg.save();
+    const end = Date.now();
+    console.log(`Saved message in ${end - start}ms`);
     res.status(201).send("Message saved successfully");
   } catch (error) {
     console.error("Something went wrong", error);
@@ -76,16 +80,22 @@ app.post("/send_to_DB", async (req, res) => {
 app.post("/user_name", async (req, res) => {
   const { form, password } = req.body;
   try {
+    console.log("Checking if user exists...");
     const existingUser = await User.findOne({ form });
     if (existingUser) {
       return res.status(400).json({ error: 'User with this username already exists' });
     }
 
+    console.log("Creating new user...");
     const newUser = new User({
       form,
       password
     });
+
+    const start = Date.now();
     await newUser.save();
+    const end = Date.now();
+    console.log(`User saved in ${end - start}ms`);
     res.status(201).json('User saved successfully');
   } catch (error) {
     res.status(500).json('Error saving user: ' + error.message);
@@ -95,6 +105,7 @@ app.post("/user_name", async (req, res) => {
 app.post("/login", async (req, res) => {
   const { form, password } = req.body;
   try {
+    console.log("Checking login credentials...");
     const existingUser = await User.findOne({ form, password });
     if (existingUser) {
       res.status(200).send("Login successful");
