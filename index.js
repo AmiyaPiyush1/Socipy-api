@@ -53,7 +53,12 @@ app.get("/messages", async (req, res) => {
     res.status(500).send("Error retrieving messages");
   }
 });
-
+app.get("/",(req,res)=>{
+  res.send("Hey everyone")
+});
+app.get("/abc",(req,res)=>{
+  res.send("Hey everyone")
+});
 app.post("/send_to_DB",async(req,res)=>{
   const {message,usernme}=req.body;
   const newMsg=new User2({
