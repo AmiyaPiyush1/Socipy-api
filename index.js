@@ -2,8 +2,8 @@ const http = require('http');
 const express = require('express');
 const { Server } = require('socket.io');
 const mongoose = require('mongoose');
-const mongoURL = 'mongodb://localhost:27017/ChatNowh';
-const mongoURL2='mongodb://localhost:27017/ChatNowh'
+const mongoURL = 'mongodb+srv://Piyush:Piyush1@cluster0.erzialc.mongodb.net/ChatNowh';
+const mongoURL2='mongodb+srv://Piyush:Piyush1@cluster0.erzialc.mongodb.net/ChatNowh'
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -57,7 +57,7 @@ app.get("/",(req,res)=>{
   res.send("Hey everyone")
 });
 app.get("/abc",(req,res)=>{
-  res.send("Hey everyone")
+  res.send("Hey everyone1")
 });
 app.post("/send_to_DB",async(req,res)=>{
   const {message,usernme}=req.body;
